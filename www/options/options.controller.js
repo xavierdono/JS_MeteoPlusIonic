@@ -2,34 +2,41 @@
     'use strict';
 
     angular
-        .module('starter.options', [])
+        .module('starter.options', ['starter.storage'])
         .controller('OptionsCtrl', OptionsCtrl);
 
-    //OptionsCtrl.inject = ['$scope'];
+    OptionsCtrl.inject = ['Storage'];
 
-    function OptionsCtrl() {
+    function OptionsCtrl(Storage) {
         var vm = this;
         vm.ville = {};
-        vm.ville.nom ='Jouarre';
+        vm.ville.nom = '';
         vm.ville.location = null;
         vm.addTown = addTown;
         vm.searchTown = searchTown;
         vm.map = null;
+        vm.error = false;
+        vm.message = null;
 
         var geocoder = new google.maps.Geocoder();
 
         ////////////////
 
         function addTown(location) {
-            console.log(location);
+            Storage.add(location);
+            vm.ville = {};
         }
 
         function searchTown(town) {
+            if(window.cordova) {
+                cordova.plugins.Keyboard.close();
+            }
+            
+            vm.error = false;            
             geocodeAddress(geocoder, map);
         }
 
         function geocodeAddress(geocoder, resultsMap) {
-
             geocoder.geocode({ 'address': vm.ville.nom }, function (results, status) {
                 if (status === 'OK') {
                     vm.ville.location = results[0].formatted_address;
@@ -44,10 +51,11 @@
                         position: results[0].geometry.location,
                         title: results[0].formatted_address
                     });
-                    marker.setMap(vm.map);
 
+                    marker.setMap(vm.map);
                 } else {
-                    console.log('Geocode was not successful for the following reason: ' + status);
+                    vm.error = true;
+                    vm.message = 'Impossible de trouver votre ville, erreur : ' + status;
                 }
             });
         }
