@@ -1,6 +1,10 @@
 img {
   border: 0; }
   
+ion-slides{
+  height: 300px;
+}
+
 .forecast-container {
   width: 100%;
   background: #FFFFFF;

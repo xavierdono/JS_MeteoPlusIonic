@@ -12,7 +12,8 @@
 
         var service = {
             add: addToStorage,
-            get: getDataFromStorage
+            get: getDataFromStorage,
+            del: removeDataFromStorage
         };
 
         return service;
@@ -35,5 +36,10 @@
             datas.push(data);
             window.localStorage.setItem(DATA_STORAGE_KEY, JSON.stringify(datas));
         }
+        
+        function removeDataFromStorage(index) {
+            datas.splice(index, 1);
+            window.localStorage.setItem(DATA_STORAGE_KEY, JSON.stringify(datas));
+        }        
     }
 })();

@@ -12,6 +12,7 @@
         vm.towns = null;
         vm.selectedTown = null;
         vm.getWeather = getWeather;
+        vm.removeTown = removeTown;
 
         activate();
 
@@ -19,6 +20,11 @@
 
         function activate() {
             vm.towns = Storage.get();
+        }
+
+        function removeTown(index) {
+            Storage.del(index);
+            activate();
         }
 
         function getWeather(town) {
@@ -59,20 +65,24 @@
                     var dtToday = new Date(parseInt(data.list[0].dt) * 1000);
 
                     // J
-                    vm.selectedTown.today.day = jours[dtToday.getDay()] + ' (' + dtToday.getHours() + 'H)';
-                    vm.selectedTown.today.date = dtToday.getDate() + ' ' + mois[dtToday.getMonth()];
-                    vm.selectedTown.today.town = data.name;
-                    vm.selectedTown.today.temp = Math.ceil(data.list[0].main.temp);
-                    vm.selectedTown.today.humidity = data.list[0].main.humidity;
-                    vm.selectedTown.today.wind = data.list[0].wind.speed;
-                    vm.selectedTown.today.cloud = data.list[0].clouds.all;
-                    vm.selectedTown.today.icon = data.list[0].weather[0].icon;
+                    // list[0]
+                    var day = {};
+                    var dt = new Date(parseInt(data.list[0].dt) * 1000);
+                    day.day = jours[dt.getDay()];
+                    day.date = dt.getDate() + ' ' + mois[dt.getMonth()];
+                    day.icon = data.list[0].weather[0].icon;
+                    day.temp = Math.ceil(data.list[0].main.temp);
+                    day.humidity = data.list[0].main.humidity;
+                    day.wind = data.list[0].wind.speed;
+                    day.cloud = data.list[0].clouds.all;
+                    vm.selectedTown.days.push(day);
 
                     // J+1
                     // list[8]
-                    var day = {};
-                    var dt = new Date(parseInt(data.list[8].dt) * 1000);
+                    day = {};
+                    dt = new Date(parseInt(data.list[8].dt) * 1000);
                     day.day = jours[dt.getDay()];
+                    day.date = dt.getDate() + ' ' + mois[dt.getMonth()];
                     day.icon = data.list[8].weather[0].icon;
                     day.temp = Math.ceil(data.list[8].main.temp);
                     day.humidity = data.list[8].main.humidity;
@@ -85,6 +95,7 @@
                     day = {};
                     dt = new Date(parseInt(data.list[16].dt) * 1000);
                     day.day = jours[dt.getDay()];
+                    day.date = dt.getDate() + ' ' + mois[dt.getMonth()];
                     day.icon = data.list[16].weather[0].icon;
                     day.temp = Math.ceil(data.list[16].main.temp);
                     day.humidity = data.list[16].main.humidity;
@@ -97,6 +108,7 @@
                     day = {};
                     dt = new Date(parseInt(data.list[24].dt) * 1000);
                     day.day = jours[dt.getDay()];
+                    day.date = dt.getDate() + ' ' + mois[dt.getMonth()];
                     day.icon = data.list[24].weather[0].icon;
                     day.temp = Math.ceil(data.list[24].main.temp);
                     day.humidity = data.list[24].main.humidity;
@@ -109,6 +121,7 @@
                     day = {};
                     dt = new Date(parseInt(data.list[32].dt) * 1000);
                     day.day = jours[dt.getDay()];
+                    day.date = dt.getDate() + ' ' + mois[dt.getMonth()];
                     day.icon = data.list[32].weather[0].icon;
                     day.temp = Math.ceil(data.list[32].main.temp);
                     day.humidity = data.list[32].main.humidity;
